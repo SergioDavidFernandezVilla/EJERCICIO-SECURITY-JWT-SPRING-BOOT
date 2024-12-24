@@ -32,9 +32,11 @@ public class SecurityConfig {
         return httpSecurity
             .csrf().disable()
             .sessionManagement(sesion -> sesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> 
-                auth.anyRequest().permitAll()
-            )
+            .authorizeHttpRequests(http -> {
+                http.requestMatchers("/auth/**").permitAll();
+                http.requestMatchers("/create/user").hasRole("ADMIN");
+                http.anyRequest().authenticated();
+            })
         .build();
     }
 
