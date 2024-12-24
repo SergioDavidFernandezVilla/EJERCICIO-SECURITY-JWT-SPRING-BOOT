@@ -28,7 +28,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+                .authorizeHttpRequests(authorize -> 
+
+                authorize.requestMatchers("/create/user").hasRole("ADMIN")
+                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/user").hasRole("USER")
+                .requestMatchers("/invited").hasRole("INVITED")
+                .anyRequest().authenticated()
+                )
                 .build();
     }
 
