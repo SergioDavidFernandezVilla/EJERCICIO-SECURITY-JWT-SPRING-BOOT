@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -35,8 +36,8 @@ public class SecurityConfig {
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(sesion -> sesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(http -> {
-                http.requestMatchers("/auth/**").permitAll();
-                http.requestMatchers("/create/user").hasRole("ADMIN");
+                http.requestMatchers(HttpMethod.GET, "/auth/index").permitAll();
+                http.requestMatchers(HttpMethod.POST,"/create/user").hasRole("ADMIN");
                 http.anyRequest().authenticated();
             })
             .build();
