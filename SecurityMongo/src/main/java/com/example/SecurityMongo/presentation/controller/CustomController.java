@@ -13,7 +13,7 @@ import com.example.SecurityMongo.config.annotation.isEmpleado;
 public class CustomController {
     
     @GetMapping("/admin")
-    @PreAuthorize("hasAuthority('{READ}')")
+    @PreAuthorize("hasAnyRole('{ADMIN}')")
     public String HiAdmin(){
         return "Hi world, Admin";
     }
