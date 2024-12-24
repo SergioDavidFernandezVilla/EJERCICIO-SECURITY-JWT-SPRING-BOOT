@@ -9,10 +9,11 @@ import com.example.SecurityMongo.config.annotation.isEmpleado;
 
 @RestController
 @RequestMapping("/auth")
+@PreAuthorize("denyAll()")
 public class CustomController {
     
     @GetMapping("/admin")
-    @PreAuthorize("hasAnyRole('{ADMIN}')")
+    @PreAuthorize("hasAuthority('{READ}')")
     public String HiAdmin(){
         return "Hi world, Admin";
     }
@@ -30,6 +31,7 @@ public class CustomController {
     }
 
     @GetMapping("/index")
+    @PreAuthorize("permitAll()")
     public String index(){
         return "Index";
     }

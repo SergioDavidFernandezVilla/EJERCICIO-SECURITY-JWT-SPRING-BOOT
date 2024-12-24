@@ -35,11 +35,6 @@ public class SecurityConfig {
             .csrf().disable()
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(sesion -> sesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(http -> {
-                http.requestMatchers(HttpMethod.GET, "/auth/index").permitAll();
-                http.requestMatchers(HttpMethod.POST,"/create/user").hasRole("ADMIN");
-                http.anyRequest().authenticated();
-            })
             .build();
     }
 
@@ -62,6 +57,7 @@ public class SecurityConfig {
         userDetailsList.add(
             User.withUsername("david")
                 .password("naruto12")
+                .authorities("READ","CREATE","UPDATE","DELETE")
                 .roles("ADMIN")
                 .build()
         );
@@ -70,12 +66,14 @@ public class SecurityConfig {
             User.withUsername("user")
                 .password("naruto12")
                 .roles("USER")
+                .authorities("READ","CREATE")
                 .build()
         );
 
         userDetailsList.add(
             User.withUsername("pedro")
                 .password("naruto12")
+                .authorities("READ")
                 .roles("INVITED")
                 .build()
         );

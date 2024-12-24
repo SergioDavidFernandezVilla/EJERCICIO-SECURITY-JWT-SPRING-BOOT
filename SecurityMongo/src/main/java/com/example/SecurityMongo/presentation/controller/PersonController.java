@@ -14,13 +14,14 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("denyAll()")
 public class PersonController {
 
 
     private final PersonRepository personRepository;
 
     @PostMapping("/create/user")
-    @PreAuthorize("hasAnyRole('{ADMIN}')")
+    @PreAuthorize("hasAuthority('{CREATE}')")
     public ResponseEntity<Person> createuser(@RequestBody Person person){
         personRepository.save(person);
         return new ResponseEntity<>(person, HttpStatus.CREATED);
