@@ -18,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -44,45 +45,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
+    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+       User.UserBuilder users = User.builder();
+        UserDetails david = users.username("david")
+        .password(passwordEncoder.encode("naruto12"))
+        .authorities("READ", "CREATE", "UPDATE","DELETE")
+        .roles("ADMIN", "USER")
+        .build();
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        List<UserDetails> userDetailsList = new ArrayList<>();
-        userDetailsList.add(
-            User.withUsername("david")
-                .password("naruto12")
-                .authorities("READ","CREATE","UPDATE","DELETE")
-                .roles("ADMIN")
-                .build()
-        );
-
-        userDetailsList.add(
-            User.withUsername("user")
-                .password("naruto12")
-                .roles("USER")
-                .authorities("READ","CREATE")
-                .build()
-        );
-
-        userDetailsList.add(
-            User.withUsername("pedro")
-                .password("naruto12")
-                .authorities("READ")
-                .roles("INVITED")
-                .build()
-        );
-
-        return new InMemoryUserDetailsManager(userDetailsList);
+        return new InMemoryUserDetailsManager(david);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 }
