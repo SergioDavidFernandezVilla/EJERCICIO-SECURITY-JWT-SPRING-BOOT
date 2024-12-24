@@ -1,5 +1,6 @@
 package com.example.SecurityMongo.presentation.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class CustomController {
     
     @GetMapping("/admin")
-    @isEmpleado("{ADMIN}")
+    @PreAuthorize("hasAnyRole('{ADMIN}')")
     public String HiAdmin(){
         return "Hi world, Admin";
     }
