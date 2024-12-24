@@ -1,85 +1,83 @@
 package com.example.SecurityMongo.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authorization.method.PrePostTemplateDefaults;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+
 @Configuration
 @EnableMethodSecurity
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .csrf(csrf -> csrf.disable())
-                .httpBasic(Customizer.withDefaults())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> 
-
-                authorize.requestMatchers("/create/user").hasRole("ADMIN")
-                .requestMatchers("/admin").hasRole("ADMIN")
-                .requestMatchers("/user").hasRole("USER")
-                .requestMatchers("/invited").hasRole("INVITED")
-                .anyRequest().authenticated()
-                )
-                .build();
+        return httpSecurity.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService());
+        provider.setPasswordEncoder(passwordEncoder());
+
+        return provider;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public UserDetailsService userDetailsService(){
+        List<UserDetails> userDetailsList = new ArrayList<>();
+        userDetailsList.add(
+            User.withUsername("david")
+            .password("naruto12")
+            .authorities("READ","CREATE","UPDATE", "DELETE")
+            .roles("ADMIN")
+            .build()
+            );
+        
+        userDetailsList.add(
+            User.withUsername("user")
+            .password("naruto12")
+            .authorities("READ","CREATE")
+            .roles("USER")
+            .build()
+            );
+        
+        userDetailsList.add(
+            User.withUsername("pedro")
+            .password("naruto12")
+            .authorities("READ")
+            .roles("INVITED")
+            .build()
+            );
+
+        return new InMemoryUserDetailsManager(userDetailsList);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
         return NoOpPasswordEncoder.getInstance();
     }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-
-        manager.createUser(User.withUsername("admin")
-                .password("1234")
-                .roles("ADMIN")
-                .build());
-
-        manager.createUser(User.withUsername("user")
-                .password("1234")
-                .roles("USER")
-                .build());
-
-        manager.createUser(User.withUsername("invited")
-                .password("1234")
-                .roles("INVITED")
-                .build());
-        return manager;
-    }
-
-    @Bean
-    PrePostTemplateDefaults prePostTemplateDefaults() {
-        return new PrePostTemplateDefaults();
-    }
+    
 }
