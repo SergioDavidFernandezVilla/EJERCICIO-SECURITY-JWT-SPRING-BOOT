@@ -39,56 +39,51 @@ public class SecurityConfig {
                 http.requestMatchers("/create/user").hasRole("ADMIN");
                 http.anyRequest().authenticated();
             })
-        .build();
+            .build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService());
         provider.setPasswordEncoder(passwordEncoder());
-
         return provider;
     }
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         List<UserDetails> userDetailsList = new ArrayList<>();
         userDetailsList.add(
             User.withUsername("david")
-            .password("naruto12")
-            .authorities("READ","CREATE","UPDATE", "DELETE")
-            .roles("ADMIN")
-            .build()
-            );
-        
+                .password("naruto12")
+                .roles("ADMIN")
+                .build()
+        );
+
         userDetailsList.add(
             User.withUsername("user")
-            .password("naruto12")
-            .authorities("READ","CREATE")
-            .roles("USER")
-            .build()
-            );
-        
+                .password("naruto12")
+                .roles("USER")
+                .build()
+        );
+
         userDetailsList.add(
             User.withUsername("pedro")
-            .password("naruto12")
-            .authorities("READ")
-            .roles("INVITED")
-            .build()
-            );
+                .password("naruto12")
+                .roles("INVITED")
+                .build()
+        );
 
         return new InMemoryUserDetailsManager(userDetailsList);
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
-    
 }
