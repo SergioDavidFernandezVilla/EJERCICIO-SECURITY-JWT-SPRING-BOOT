@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@PreAuthorize("denyAll()")
 public class CustomController {
     
     @GetMapping("/admin")
