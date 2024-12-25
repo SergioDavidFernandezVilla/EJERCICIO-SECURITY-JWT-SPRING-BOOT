@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.SecurityMongo.persistence.entity.PermissionEntity;
 import com.example.SecurityMongo.persistence.entity.RoleEntity;
@@ -19,6 +21,11 @@ public class SecurityMongoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SecurityMongoApplication.class, args);
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder(){
+		return new BCryptPasswordEncoder();
 	}
 
 	@Bean
@@ -61,7 +68,7 @@ public class SecurityMongoApplication {
 			/* CREACION USUARIOS */
 			UserEntity david = UserEntity.builder()
 			.username("david")
-			.password("naruto12")
+			.password(passwordEncoder().encode("naruto12"))
 			.isEnable(true)
 			.accountNoExpired(true)
 			.accountNoLocked(true)
@@ -71,7 +78,7 @@ public class SecurityMongoApplication {
 
 			UserEntity user = UserEntity.builder()
 			.username("user")
-			.password("1234")
+			.password(passwordEncoder().encode("naruto12"))
 			.isEnable(true)
 			.accountNoExpired(true)
 			.accountNoLocked(true)
@@ -81,7 +88,7 @@ public class SecurityMongoApplication {
 
 			UserEntity invited = UserEntity.builder()
 			.username("invited")
-			.password("1234")
+			.password(passwordEncoder().encode("naruto12"))
 			.isEnable(true)
 			.accountNoExpired(true)
 			.accountNoLocked(true)
