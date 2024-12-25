@@ -30,12 +30,6 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
-        <!-- Dependencias de MongoDB -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
-
         <!-- Dependencias de seguridad -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
