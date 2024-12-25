@@ -24,11 +24,6 @@ public class SecurityMongoApplication {
 	}
 
 	@Bean
-	public PasswordEncoder passwordEncoder(){
-		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
 	CommandLineRunner init(UserRepository userRepository) {
 		return args -> {
 			/* Creación de permisos */
@@ -68,7 +63,7 @@ public class SecurityMongoApplication {
 			/* CREACION USUARIOS */
 			UserEntity david = UserEntity.builder()
 			.username("david")
-			.password(passwordEncoder().encode("naruto12"))
+			.password("naruto12")
 			.isEnable(true)
 			.accountNoExpired(true)
 			.accountNoLocked(true)
@@ -78,7 +73,7 @@ public class SecurityMongoApplication {
 
 			UserEntity user = UserEntity.builder()
 			.username("user")
-			.password(passwordEncoder().encode("naruto12"))
+			.password("1234")
 			.isEnable(true)
 			.accountNoExpired(true)
 			.accountNoLocked(true)
@@ -88,7 +83,7 @@ public class SecurityMongoApplication {
 
 			UserEntity invited = UserEntity.builder()
 			.username("invited")
-			.password(passwordEncoder().encode("naruto12"))
+			.password("1234")
 			.isEnable(true)
 			.accountNoExpired(true)
 			.accountNoLocked(true)
