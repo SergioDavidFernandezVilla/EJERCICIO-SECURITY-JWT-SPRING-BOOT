@@ -20,7 +20,7 @@ import com.example.SecurityMongo.persistence.services.UserDetailsServiceImpl;
 
 
 @Configuration
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -36,11 +36,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/auth/index").permitAll()
 
                 /* ENDPOINTS PRIVADOS */
-                .requestMatchers(HttpMethod.GET, "/auth/admin").hasAnyAuthority("READ")
+                .requestMatchers(HttpMethod.GET, "/auth/admin").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/auth/user").hasAnyAuthority("READ")
                 .requestMatchers(HttpMethod.GET, "/auth/invited").hasAnyAuthority("READ")
 
-                .anyRequest().denyAll()
+                .anyRequest().permitAll()
             )
             .build();
     }

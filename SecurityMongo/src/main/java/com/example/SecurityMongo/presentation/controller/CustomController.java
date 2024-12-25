@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.SecurityMongo.config.annotation.isEmpleado;
 
 @RestController
 @RequestMapping("/auth")
@@ -17,13 +16,11 @@ public class CustomController {
     }
 
     @GetMapping("/user")
-    @isEmpleado("{USER}")
     public String HiUser(){
         return "Hi world, User";
     }
 
     @GetMapping("/invited")
-    @isEmpleado("{INVITED}")
     public String HiInvited(){
         return "Hi world, Invited";
     }
@@ -31,5 +28,11 @@ public class CustomController {
     @GetMapping("/index")
     public String index(){
         return "Index";
+    }
+
+    @GetMapping("/protected")
+    @PreAuthorize("hasAuthority('READ')")
+    public String Protected(){
+        return "Ruta protegida - READ";
     }
 }
