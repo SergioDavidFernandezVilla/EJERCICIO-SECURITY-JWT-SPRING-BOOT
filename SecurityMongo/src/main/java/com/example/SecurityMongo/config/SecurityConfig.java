@@ -2,6 +2,7 @@ package com.example.SecurityMongo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,6 +30,18 @@ public class SecurityConfig {
             .csrf().disable()
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(sesion -> sesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+
+                /* ENDPOINTS PUBLICOS */
+                .requestMatchers(HttpMethod.GET, "/auth/index").permitAll()
+
+                /* ENDPOINTS PRIVADOS */
+                .requestMatchers(HttpMethod.GET, "/auth/admin").hasAnyAuthority("READ")
+                .requestMatchers(HttpMethod.GET, "/auth/user").hasAnyAuthority("READ")
+                .requestMatchers(HttpMethod.GET, "/auth/invited").hasAnyAuthority("READ")
+
+                .anyRequest().denyAll()
+            )
             .build();
     }
 
