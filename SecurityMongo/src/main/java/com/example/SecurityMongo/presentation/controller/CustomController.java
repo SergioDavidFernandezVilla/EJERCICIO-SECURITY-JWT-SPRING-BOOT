@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-@PreAuthorize("denyAll()")
 public class CustomController {
     
     @GetMapping("/admin")
@@ -24,11 +23,6 @@ public class CustomController {
     @GetMapping("/invited")
     public String HiInvited(){
         return "Hi world, Invited";
-    }
-
-    @GetMapping("/index")
-    public String index(){
-        return "Index";
     }
 
     @GetMapping("/protected")

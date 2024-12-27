@@ -36,6 +36,13 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!--Dependencias de jwt -->
+        <dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>4.2.1</version>
+		</dependency>
+
         <!-- Dependencias de Web (Spring Boot Starter Web) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

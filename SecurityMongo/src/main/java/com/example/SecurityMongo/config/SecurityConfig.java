@@ -1,5 +1,6 @@
 package com.example.SecurityMongo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,14 +16,20 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import com.example.SecurityMongo.config.filter.JwtFilterValidator;
 import com.example.SecurityMongo.persistence.services.UserDetailsServiceImpl;
+import com.example.SecurityMongo.utils.JwtUtils;
 
 
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -34,6 +41,8 @@ public class SecurityConfig {
 
                 /* ENDPOINTS PUBLICOS */
                 .requestMatchers(HttpMethod.GET, "/auth/index").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 
                 /* ENDPOINTS PRIVADOS */
                 .requestMatchers(HttpMethod.GET, "/auth/admin").hasRole("ADMIN")
@@ -42,6 +51,7 @@ public class SecurityConfig {
 
                 .anyRequest().permitAll()
             )
+            .addFilterBefore(new JwtFilterValidator(jwtUtils), BasicAuthenticationFilter.class)
             .build();
     }
 
