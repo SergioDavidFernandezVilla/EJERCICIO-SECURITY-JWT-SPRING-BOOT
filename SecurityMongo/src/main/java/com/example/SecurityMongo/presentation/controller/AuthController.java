@@ -1,5 +1,6 @@
 package com.example.SecurityMongo.presentation.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import com.example.SecurityMongo.persistence.services.UserDetailsServiceImpl;
 @RequestMapping("/auth")
 public class AuthController {
     
+    @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
     @GetMapping("/index")
@@ -27,11 +29,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> register(@RequestBody AuthCreateUserDTO authCreateUser){
-        return new ResponseEntity<>(this.userDetailsServiceImpl.createUser(authCreateUser), HttpStatus.CREATED);
+        return new ResponseEntity<>(userDetailsServiceImpl.createUser(authCreateUser), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthRequestLoginDTO loginAuth){
-        return new ResponseEntity<>(this.userDetailsServiceImpl.loginUser(loginAuth), HttpStatus.OK);
+        return new ResponseEntity<>(userDetailsServiceImpl.loginUser(loginAuth), HttpStatus.OK);
     }   
 }
